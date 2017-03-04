@@ -28,8 +28,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && set -x \
     && /usr/bin/update-alternatives --install /usr/bin/php php /usr/bin/hhvm 60 \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
     && /opt/docker/bin/provision run --tag bootstrap --role webdevops-hhvm \
-    && /opt/docker/bin/bootstrap.sh
-
+    && /opt/docker/bin/bootstrap.sh \
+    && /usr/local/bin/docker-image-cleanup
 
 EXPOSE 9000
 

@@ -1,3 +1,5 @@
+{% import 'Dockerfile/docker.jinja2' as docker %}
+
 {% macro alpine() -%}
 # Init bootstrap (and install ansible)
 RUN set -x \
@@ -11,6 +13,7 @@ RUN set -x \
     && /usr/local/bin/apk-install \
         bash \
         ca-certificates \
+    && /usr/local/bin/generate-lsb-info \
     # Install ansible
     && /usr/local/bin/apk-install \
         python \
@@ -47,7 +50,7 @@ RUN set -x \
     && apk del .gosu-deps \
     # Cleanup
     && apk del python-dev \
-    && find /var/log/ -mindepth 1 -delete
+    {{ docker.cleanup() }}
 {%- endmacro %}
 
 
@@ -72,6 +75,7 @@ RUN set -x \
         libffi \
         python-devel \
         libffi-devel \
+    && /usr/local/bin/generate-lsb-info \
     && easy_install pip \
     && pip install --upgrade pip \
     && hash -r \
@@ -92,8 +96,7 @@ RUN set -x \
     && yum erase -y wget \
     # Cleanup
     && yum erase -y python-devel \
-    && yum clean all \
-    && find /var/log/ -mindepth 1 -delete
+    {{ docker.cleanup() }}
 {%- endmacro %}
 
 
@@ -109,10 +112,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && /usr/local/bin/apt-upgrade \
     # Base stuff
     && /usr/local/bin/apt-install \
-        lsb-release \
         ca-certificates \
         locales \
         apt-transport-https \
+    && /usr/local/bin/generate-lsb-info \
     # Generate base locale
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen \
@@ -150,9 +153,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         build-essential \
         libssl-dev \
         libffi-dev \
-    && apt-get autoremove -y -f \
-    && apt-get clean -y \
-    && find /var/log/ -mindepth 1 -delete
+    {{ docker.cleanup() }}
 {%- endmacro %}
 
 
@@ -174,7 +175,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     # Install base stuff
     && /usr/local/bin/apt-install \
         python-software-properties \
-        lsb-release \
         ca-certificates \
         # Install ansible
         python-minimal \
@@ -187,6 +187,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         libssl-dev \
         build-essential \
         apt-transport-https \
+    && /usr/local/bin/generate-lsb-info \
     && pip install --upgrade pip \
     && hash -r \
     && pip install ansible \
@@ -210,9 +211,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         build-essential \
         libssl-dev \
         libffi-dev \
-    && apt-get autoremove -y -f \
-    && apt-get clean -y \
-    && find /var/log/ -mindepth 1 -delete
+    {{ docker.cleanup() }}
 {%- endmacro %}
 
 
@@ -229,10 +228,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     # Install base stuff
     && /usr/local/bin/apt-install \
         software-properties-common \
-        lsb-release \
         ca-certificates \
         apt-transport-https \
     && apt-add-repository multiverse \
+    && /usr/local/bin/generate-lsb-info \
     # Install ansible
     && /usr/local/bin/apt-install \
         python-minimal \
@@ -268,8 +267,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         build-essential \
         libssl-dev \
         libffi-dev \
-    && apt-get autoremove -y -f \
-    && apt-get clean -y \
-    && find /var/log/ -mindepth 1 -delete
+    {{ docker.cleanup() }}
 {%- endmacro %}
 

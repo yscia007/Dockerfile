@@ -33,7 +33,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     # Install base stuff
     && /usr/local/bin/apt-install \
         python-software-properties \
-        lsb-release \
         ca-certificates \
         # Install ansible
         python-minimal \
@@ -46,6 +45,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         libssl-dev \
         build-essential \
         apt-transport-https \
+    && /usr/local/bin/generate-lsb-info \
     && pip install --upgrade pip \
     && hash -r \
     && pip install ansible \
@@ -69,6 +69,4 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         build-essential \
         libssl-dev \
         libffi-dev \
-    && apt-get autoremove -y -f \
-    && apt-get clean -y \
-    && find /var/log/ -mindepth 1 -delete
+    && /usr/local/bin/docker-image-cleanup

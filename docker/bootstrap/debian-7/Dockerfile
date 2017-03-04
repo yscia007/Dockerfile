@@ -27,10 +27,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && /usr/local/bin/apt-upgrade \
     # Base stuff
     && /usr/local/bin/apt-install \
-        lsb-release \
         ca-certificates \
         locales \
         apt-transport-https \
+    && /usr/local/bin/generate-lsb-info \
     # Generate base locale
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen \
@@ -68,6 +68,4 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         build-essential \
         libssl-dev \
         libffi-dev \
-    && apt-get autoremove -y -f \
-    && apt-get clean -y \
-    && find /var/log/ -mindepth 1 -delete
+    && /usr/local/bin/docker-image-cleanup

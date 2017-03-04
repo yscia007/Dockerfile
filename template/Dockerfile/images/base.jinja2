@@ -1,3 +1,4 @@
+{% import 'Dockerfile/docker.jinja2' as docker %}
 {% import 'Dockerfile/provision.jinja2' as provision %}
 
 {% macro alpine(role='') -%}
@@ -12,7 +13,8 @@ RUN chmod +x /opt/docker/bin/* \
         sed \
         gnupg \
     && chmod +s /usr/local/bin/gosu \
-    {{ provision.runRoleInline('base', role) }}
+    {{ provision.runRoleInline('base', role) }} \
+    {{ docker.cleanup() }}
 {%- endmacro %}
 
 
@@ -29,7 +31,8 @@ RUN chmod +x /opt/docker/bin/* \
         net-tools \
         gnupg2 \
     && chmod +s /usr/local/bin/gosu \
-    {{ provision.runRoleInline('base', role) }}
+    {{ provision.runRoleInline('base', role) }} \
+    {{ docker.cleanup() }}
 {%- endmacro %}
 
 
@@ -47,7 +50,8 @@ RUN chmod +x /opt/docker/bin/* \
         net-tools \
         gnupg \
     && chmod +s /usr/local/bin/gosu \
-    {{ provision.runRoleInline('base', role) }}
+    {{ provision.runRoleInline('base', role) }} \
+    {{ docker.cleanup() }}
 {%- endmacro %}
 
 
@@ -65,5 +69,6 @@ RUN chmod +x /opt/docker/bin/* \
         net-tools \
         gnupg \
     && chmod +s /usr/local/bin/gosu \
-    {{ provision.runRoleInline('base', role) }}
+    {{ provision.runRoleInline('base', role) }} \
+    {{ docker.cleanup() }}
 {%- endmacro %}

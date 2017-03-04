@@ -28,10 +28,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     # Install base stuff
     && /usr/local/bin/apt-install \
         software-properties-common \
-        lsb-release \
         ca-certificates \
         apt-transport-https \
     && apt-add-repository multiverse \
+    && /usr/local/bin/generate-lsb-info \
     # Install ansible
     && /usr/local/bin/apt-install \
         python-minimal \
@@ -67,6 +67,4 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         build-essential \
         libssl-dev \
         libffi-dev \
-    && apt-get autoremove -y -f \
-    && apt-get clean -y \
-    && find /var/log/ -mindepth 1 -delete
+    && /usr/local/bin/docker-image-cleanup

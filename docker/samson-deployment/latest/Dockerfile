@@ -32,10 +32,10 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && /usr/local/bin/apt-upgrade \
     # Base stuff
     && /usr/local/bin/apt-install \
-        lsb-release \
         ca-certificates \
         locales \
         apt-transport-https \
+    && /usr/local/bin/generate-lsb-info \
     # Generate base locale
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen \
@@ -73,9 +73,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         build-essential \
         libssl-dev \
         libffi-dev \
-    && apt-get autoremove -y -f \
-    && apt-get clean -y \
-    && find /var/log/ -mindepth 1 -delete
+    && /usr/local/bin/docker-image-cleanup
 
 ###############################################################################
 # Base
@@ -99,8 +97,8 @@ RUN chmod +x /opt/docker/bin/* \
         gnupg \
     && chmod +s /usr/local/bin/gosu \
     && /opt/docker/bin/provision run --tag bootstrap --role webdevops-base \
-    && /opt/docker/bin/bootstrap.sh
-
+    && /opt/docker/bin/bootstrap.sh \
+    && /usr/local/bin/docker-image-cleanup
 
 ###############################################################################
 # Base-app
@@ -137,8 +135,8 @@ RUN /usr/local/bin/apt-install \
         vim \
     && /usr/local/bin/generate-locales \
     && /opt/docker/bin/provision run --tag bootstrap --role webdevops-base-app \
-    && /opt/docker/bin/bootstrap.sh
-
+    && /opt/docker/bin/bootstrap.sh \
+    && /usr/local/bin/docker-image-cleanup
 
 ###############################################################################
 # Samson
@@ -173,7 +171,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && set -x \
         python-dotenv \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer \
     ## Enable ansible for deployment user
-    && chmod 755 /usr/local/bin/ansible*
+    && chmod 755 /usr/local/bin/ansible* \
+    && /usr/local/bin/docker-image-cleanup
 
 # NPM stack
 RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - \
@@ -182,7 +181,8 @@ RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - \
     && npm install -g gulp \
     && npm install -g grunt-cli \
     && npm install -g bower \
-    && npm install -g npm-cache
+    && npm install -g npm-cache \
+    && /usr/local/bin/docker-image-cleanup
 
 # Deployer stack
 RUN set -x \
@@ -203,7 +203,8 @@ RUN set -x \
     && tar -xzf /tmp/magallanes.tar.gz -C /tmp/ \
     && /tmp/magallanes/bin/mage install --installDir=/opt/magallanes \
     && rm -rf /tmp/magallanes.tar.gz /tmp/magallanes/ \
-    && ln -s /opt/magallanes/latest/bin/mage /usr/bin/mage
+    && ln -s /opt/magallanes/latest/bin/mage /usr/bin/mage \
+    && /usr/local/bin/docker-image-cleanup
 
 # Upload
 ADD database.yml    /app/config/database.yml
@@ -215,7 +216,6 @@ RUN rake assets:precompile \
     && /opt/docker/bin/control.sh service.enable cron \
     && /opt/docker/bin/provision run --tag bootstrap --role webdevops-base --role webdevops-base-app --role webdevops-samson-deployment \
     && /opt/docker/bin/bootstrap.sh
-
 
 EXPOSE 80
 VOLUME /storage

@@ -1,0 +1,74 @@
+#!/bin/sh
+
+set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
+set -o errexit   ## set -e : exit the script if any statement returns a non-true return value
+
+LSB_FAMILY=""
+
+#############################
+# Distribution detection
+#############################
+
+if [ -x "/usr/bin/apt-get" ]; then
+    # Debian family
+    LSB_FAMILY="debian"
+
+elif [ -x "/bin/yum" ]; then
+    # RedHat family
+    LSB_FAMILY="redhat"
+
+elif [ -x "/sbin/apk" ]; then
+    # Alpine family
+    LSB_FAMILY="alpine"
+
+else
+    # Unknown
+    echo "ERROR: Distribution detection failed"
+    exit 1
+fi
+
+#############################
+# Install
+#############################
+
+case "$LSB_FAMILY" in
+    debian)
+        apt-install lsb-release
+        ;;
+
+    redhat)
+        yum-install redhat-lsb-core
+        ;;
+esac
+
+#############################
+# Set distribution information
+#############################
+
+echo "Detected $LSB_FAMILY"
+echo "$LSB_FAMILY" > /etc/lsb_family
+echo "$LSB_FAMILY" > /etc/lsb_distribution
+
+case "$LSB_FAMILY" in
+    debian|redhat)
+        lsb_release -i -s > /etc/lsb_distribution
+        lsb_release -r -s > /etc/lsb_distribution_version
+        lsb_release -a > /etc/lsb_release
+        ;;
+esac
+
+
+#############################
+# Uninstall
+#############################
+
+case "$LSB_FAMILY" in
+    debian)
+        apt-get purge -y -f lsb-release
+        ;;
+
+    redhat)
+        yum erase --assumeyes redhat-lsb-core
+        yum autoremove --assumeyes
+        ;;
+esac
