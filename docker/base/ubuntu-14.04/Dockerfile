@@ -20,7 +20,6 @@ RUN chmod +x /opt/docker/bin/* \
         supervisor \
         syslog-ng \
         syslog-ng-core \
-        logrotate \
         cron \
         wget \
         curl \

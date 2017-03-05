@@ -20,7 +20,6 @@ RUN chmod +x /opt/docker/bin/* \
         cronie \
         supervisor \
         syslog-ng \
-        logrotate \
         wget \
         curl \
         net-tools \

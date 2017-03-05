@@ -19,7 +19,6 @@ RUN chmod +x /opt/docker/bin/* \
     && /usr/local/bin/apk-install \
         supervisor \
         syslog-ng \
-        logrotate \
         wget \
         curl \
         sed \
