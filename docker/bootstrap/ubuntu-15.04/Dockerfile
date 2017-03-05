@@ -19,6 +19,7 @@ ADD baselayout.tar /
 # Init bootstrap (and install ansible)
 RUN export DEBIAN_FRONTEND=noninteractive \
     && set -x \
+    && apt-update \
     # Fix root terminal
     && echo "export TERM=xterm" >> /root/.bashrc \
     # Generate base locale
@@ -27,11 +28,11 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && /usr/local/bin/apt-upgrade \
     # Install base stuff
     && /usr/local/bin/apt-install \
-        software-properties-common \
         ca-certificates \
         apt-transport-https \
     && apt-add-repository multiverse \
-    && /usr/local/bin/generate-lsb-info \
+    && apt-update \
+    && /usr/local/bin/generate-dockerimage-info \
     # Install ansible
     && /usr/local/bin/apt-install \
         python-minimal \

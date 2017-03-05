@@ -24,6 +24,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && echo "deb-src http://archive.ubuntu.com/ubuntu/ precise-security multiverse" >> /etc/apt/sources.list \
     && echo "deb http://archive.ubuntu.com/ubuntu/ precise multiverse" >> /etc/apt/sources.list \
     && echo "deb-src http://archive.ubuntu.com/ubuntu/ precise multiverse" >> /etc/apt/sources.list \
+    && apt-update \
     # Fix root terminal
     && echo "export TERM=xterm" >> /root/.bashrc \
     # Generate base locale
@@ -45,7 +46,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         libssl-dev \
         build-essential \
         apt-transport-https \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     && pip install --upgrade pip \
     && hash -r \
     && pip install ansible \

@@ -35,7 +35,7 @@ RUN set -x \
         libffi \
         python-devel \
         libffi-devel \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     && easy_install pip \
     && pip install --upgrade pip \
     && hash -r \

@@ -28,7 +28,7 @@ RUN set -x \
     && /usr/local/bin/apk-install \
         bash \
         ca-certificates \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     # Install ansible
     && /usr/local/bin/apk-install \
         python \

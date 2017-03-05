@@ -46,14 +46,18 @@ esac
 #############################
 
 echo "Detected $LSB_FAMILY"
-echo "$LSB_FAMILY" > /etc/lsb_family
-echo "$LSB_FAMILY" > /etc/lsb_distribution
+echo "$LSB_FAMILY" > /etc/dockerimage_distribution_family
+echo "$LSB_FAMILY" > /etc/dockerimage_distribution
 
 case "$LSB_FAMILY" in
     debian|redhat)
-        lsb_release -i -s > /etc/lsb_distribution
-        lsb_release -r -s > /etc/lsb_distribution_version
-        lsb_release -a > /etc/lsb_release
+        lsb_release -i -s | tr '[:upper:]' '[:lower:]' > /etc/dockerimage_distribution
+        lsb_release -r -s > /etc/dockerimage_distribution_version
+        lsb_release -a > /etc/dockerimage_lsb_release
+        ;;
+
+    alpine)
+        cat /etc/alpine-release > /etc/dockerimage_distribution_version
         ;;
 esac
 

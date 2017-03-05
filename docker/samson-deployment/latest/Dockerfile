@@ -28,14 +28,15 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && echo "export TERM=xterm" >> /root/.bashrc \
     # Enable non-free
     && sed -ri 's/(deb.*\/debian jessie main)/\1 contrib non-free /' -- /etc/apt/sources.list \
-    # System updatei
+    && apt-update \
+    # System update
     && /usr/local/bin/apt-upgrade \
     # Base stuff
     && /usr/local/bin/apt-install \
         ca-certificates \
         locales \
         apt-transport-https \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     # Generate base locale
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen \

@@ -13,7 +13,7 @@ RUN set -x \
     && /usr/local/bin/apk-install \
         bash \
         ca-certificates \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     # Install ansible
     && /usr/local/bin/apk-install \
         python \
@@ -75,7 +75,7 @@ RUN set -x \
         libffi \
         python-devel \
         libffi-devel \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     && easy_install pip \
     && pip install --upgrade pip \
     && hash -r \
@@ -108,14 +108,15 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && echo "export TERM=xterm" >> /root/.bashrc \
     # Enable non-free
     && sed -ri 's/(deb.*\/debian {{ distribution }} main)/\1 contrib non-free /' -- /etc/apt/sources.list \
-    # System updatei
+    && apt-update \
+    # System update
     && /usr/local/bin/apt-upgrade \
     # Base stuff
     && /usr/local/bin/apt-install \
         ca-certificates \
         locales \
         apt-transport-https \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     # Generate base locale
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen \
@@ -166,6 +167,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && echo "deb-src http://archive.ubuntu.com/ubuntu/ precise-security multiverse" >> /etc/apt/sources.list \
     && echo "deb http://archive.ubuntu.com/ubuntu/ precise multiverse" >> /etc/apt/sources.list \
     && echo "deb-src http://archive.ubuntu.com/ubuntu/ precise multiverse" >> /etc/apt/sources.list \
+    && apt-update \
     # Fix root terminal
     && echo "export TERM=xterm" >> /root/.bashrc \
     # Generate base locale
@@ -187,7 +189,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
         libssl-dev \
         build-essential \
         apt-transport-https \
-    && /usr/local/bin/generate-lsb-info \
+    && /usr/local/bin/generate-dockerimage-info \
     && pip install --upgrade pip \
     && hash -r \
     && pip install ansible \
@@ -219,6 +221,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 # Init bootstrap (and install ansible)
 RUN export DEBIAN_FRONTEND=noninteractive \
     && set -x \
+    && apt-update \
     # Fix root terminal
     && echo "export TERM=xterm" >> /root/.bashrc \
     # Generate base locale
@@ -227,11 +230,11 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && /usr/local/bin/apt-upgrade \
     # Install base stuff
     && /usr/local/bin/apt-install \
-        software-properties-common \
         ca-certificates \
         apt-transport-https \
     && apt-add-repository multiverse \
-    && /usr/local/bin/generate-lsb-info \
+    && apt-update \
+    && /usr/local/bin/generate-dockerimage-info \
     # Install ansible
     && /usr/local/bin/apt-install \
         python-minimal \
