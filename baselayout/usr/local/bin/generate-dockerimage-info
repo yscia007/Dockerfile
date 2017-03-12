@@ -11,15 +11,15 @@ LSB_FAMILY=""
 
 if [ -x "/usr/bin/apt-get" ]; then
     # Debian family
-    LSB_FAMILY="debian"
+    LSB_FAMILY="Debian"
 
 elif [ -x "/bin/yum" ]; then
     # RedHat family
-    LSB_FAMILY="redhat"
+    LSB_FAMILY="RedHat"
 
 elif [ -x "/sbin/apk" ]; then
     # Alpine family
-    LSB_FAMILY="alpine"
+    LSB_FAMILY="Alpine"
 
 else
     # Unknown
@@ -32,11 +32,11 @@ fi
 #############################
 
 case "$LSB_FAMILY" in
-    debian)
+    Debian)
         apt-install lsb-release
         ;;
 
-    redhat)
+    RedHat)
         yum-install redhat-lsb-core
         ;;
 esac
@@ -50,14 +50,23 @@ echo "$LSB_FAMILY" > /etc/dockerimage_distribution_family
 echo "$LSB_FAMILY" > /etc/dockerimage_distribution
 
 case "$LSB_FAMILY" in
-    debian|redhat)
-        lsb_release -i -s | tr '[:upper:]' '[:lower:]' > /etc/dockerimage_distribution
+    Debian|RedHat)
+        lsb_release -i -s > /etc/dockerimage_distribution
         lsb_release -r -s > /etc/dockerimage_distribution_version
-        lsb_release -a > /etc/dockerimage_lsb_release
+        lsb_release -a > /etc/dockerimage_lsb
+        lsb_release -i -s > /etc/dockerimage_lsb_id
+        lsb_release -d -s > /etc/dockerimage_lsb_id
+        lsb_release -r -s > /etc/dockerimage_lsb_release
+        lsb_release -c -s > /etc/dockerimage_lsb_codename
         ;;
 
-    alpine)
+    Alpine)
         cat /etc/alpine-release > /etc/dockerimage_distribution_version
+        touch /etc/dockerimage_lsb
+        touch /etc/dockerimage_lsb_id
+        touch /etc/dockerimage_lsb_id
+        touch /etc/dockerimage_lsb_release
+        touch /etc/dockerimage_lsb_codename
         ;;
 esac
 
@@ -67,11 +76,11 @@ esac
 #############################
 
 case "$LSB_FAMILY" in
-    debian)
+    Debian)
         apt-get purge -y -f lsb-release
         ;;
 
-    redhat)
+    RedHat)
         yum erase --assumeyes redhat-lsb-core
         yum autoremove --assumeyes
         ;;

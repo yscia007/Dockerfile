@@ -22,21 +22,21 @@ ENV LC_ALL "en_US.UTF-8"
 ADD baselayout.tar /
 
 # Init bootstrap (and install ansible)
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && set -x \
+RUN set -x \
     # Fix root terminal
     && echo "export TERM=xterm" >> /root/.bashrc \
+    && apt-update \
+    && /usr/local/bin/generate-dockerimage-info \
     # Enable non-free
-    && sed -ri 's/(deb.*\/debian jessie main)/\1 contrib non-free /' -- /etc/apt/sources.list \
+    && sed -ri "s/(deb.*\/debian $(cat /etc/dockerimage_lsb_codename) main)/\1 contrib non-free /" -- /etc/apt/sources.list \
     && apt-update \
     # System update
     && /usr/local/bin/apt-upgrade \
     # Base stuff
     && /usr/local/bin/apt-install \
+        apt-transport-https \
         ca-certificates \
         locales \
-        apt-transport-https \
-    && /usr/local/bin/generate-dockerimage-info \
     # Generate base locale
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen \

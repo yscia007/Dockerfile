@@ -17,8 +17,7 @@ ENV LC_ALL "en_US.UTF-8"
 ADD baselayout.tar /
 
 # Init bootstrap (and install ansible)
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && set -x \
+RUN set -x \
     # Add multiverse
     && echo "deb http://archive.ubuntu.com/ubuntu/ precise-security multiverse" >> /etc/apt/sources.list \
     && echo "deb-src http://archive.ubuntu.com/ubuntu/ precise-security multiverse" >> /etc/apt/sources.list \
@@ -33,6 +32,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && /usr/local/bin/apt-upgrade \
     # Install base stuff
     && /usr/local/bin/apt-install \
+        apt-transport-https \
         python-software-properties \
         ca-certificates \
         # Install ansible

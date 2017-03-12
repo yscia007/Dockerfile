@@ -17,8 +17,7 @@ ENV LC_ALL "en_US.UTF-8"
 ADD baselayout.tar /
 
 # Init bootstrap (and install ansible)
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && set -x \
+RUN set -x \
     && apt-update \
     # Fix root terminal
     && echo "export TERM=xterm" >> /root/.bashrc \

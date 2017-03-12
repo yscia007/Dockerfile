@@ -5,14 +5,14 @@ set -o errtrace  ## trace ERR through 'time command' and other functions
 set -o nounset   ## set -u : exit the script if you try to use an uninitialised variable
 set -o errexit   ## set -e : exit the script if any statement returns a non-true return value
 
-LSB_DISTRIBUTION=$(cat dockerimage_distribution)
-LSB_DISTRIBUTION_VERSION=$(cat dockerimage_distribution_version)
+LSB_DISTRIBUTION=$(cat /etc/dockerimage_distribution)
+LSB_DISTRIBUTION_VERSION=$(cat /etc/dockerimage_distribution_version)
 
 #######################################
 ## Debian
 #######################################
 
-if [[ "$LSB_DISTRIBUTION" == "debian" ]]; then
+if [[ "$LSB_DISTRIBUTION" == "Debian" ]]; then
     /usr/local/bin/apt-install locales-all
 fi
 
@@ -20,7 +20,7 @@ fi
 ## Ubuntu
 #######################################
 
-if [[ "$LSB_DISTRIBUTION" == "ubuntu" ]]; then
+if [[ "$LSB_DISTRIBUTION" == "Ubuntu" ]]; then
     if [[ "$(echo $LSB_DISTRIBUTION_VERSION| cut -f 1 -d .)" -ge "16" ]]; then
         # Ubuntu 16.04 or later
         /usr/local/bin/apt-install locales-all
