@@ -22,6 +22,10 @@ case "$LSB_FAMILY" in
         find /var/lib/apk/ -mindepth 1 -delete
         ;;
 
+    Arch)
+        pacman -Sc
+        ;;
+
     *)
         echo "ERROR: Distribution $LSB_FAMILY not supported"
         exit 1

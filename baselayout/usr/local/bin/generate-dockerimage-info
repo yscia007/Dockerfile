@@ -21,6 +21,10 @@ elif [ -x "/sbin/apk" ]; then
     # Alpine family
     LSB_FAMILY="Alpine"
 
+elif [ -f "/etc/arch-release" ]; then
+    # Alpine family
+    LSB_FAMILY="Arch"
+
 else
     # Unknown
     echo "ERROR: Distribution detection failed"
